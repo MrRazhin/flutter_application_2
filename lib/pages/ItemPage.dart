@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_2/models/Cart.dart';
 import 'package:flutter_application_2/models/Product.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert' as convert;
 
 import 'CartPage.dart';
 
@@ -78,14 +80,40 @@ class ItemPage extends StatelessWidget {
                             color: Theme.of(context).primaryColor,
                             child: const Text('Add to cart'),
                             onPressed: () {
-                              Provider.of<CartDataProvider>(context,
-                                      listen: false)
-                                  .addItem(
-                                productId: data.id,
-                                price: data.price,
-                                title: data.title,
-                                imgUrl: data.imgUrl,
-                              );
+                              // Provider.of<CartDataProvider>(context,
+                              //         listen: false)
+                              //     .addItem(
+                              //   productId: data.id,
+                              //   price: data.price,
+                              //   title: data.title,
+                              //   imgUrl: data.imgUrl,
+                              // );
+                              print('Test');
+                              http.get(
+                                Uri.parse(
+                                    "https://api.wgg.company/products.json"),
+                                headers: {
+                                  'Content-Type':
+                                      'application/json; charset=UTF-8'
+                                },
+                              ).then((response) {
+                                var jsonResponse =
+                                    convert.jsonDecode(response.body)
+                                        as Map<String, dynamic>;
+                                jsonResponse['products'].forEach((event) {
+                                  print(event["id"]);
+                                });
+                              });
+                              // void main(List<String> arguments) async {
+                              //   var url = Uri.https("https://api.wgg.company",
+                              //       "/products.json");
+                              //   var response = await http.get(url);
+                              //   if (response.statusCode == 200) {
+                              //     print(response.body);
+                              //   } else {
+                              //     print(response.statusCode);
+                              //   }
+                              // }
                             },
                           )
                   ],
